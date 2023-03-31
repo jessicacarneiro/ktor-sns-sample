@@ -1,32 +1,55 @@
 import aws.sdk.kotlin.services.sns.SnsClient
 import aws.sdk.kotlin.services.sns.model.CreateTopicRequest
+import aws.sdk.kotlin.services.sns.model.ListTopicsRequest
 import aws.sdk.kotlin.services.sns.model.PublishRequest
+import com.example.responses.MessagePublishedResponse
+import com.example.responses.TopicCreatedResponse
+import com.example.responses.TopicsListResponse
 
 class SnsService {
-    suspend fun createSNSTopic(topicName: String): String {
+    private val defaultAwsRegion = System.getenv("AWS_REGION")
+    private val awsAccountId = System.getenv("AWS_ACCOUNT_ID")
+    private val defaultTopicName = System.getenv("DEFAULT_TOPIC_NAME")
+    private val topicArnBase = "arn:aws:sns:"
+
+    suspend fun createSNSTopic(topicName: String, awsRegion: String?): TopicCreatedResponse {
 
         val request = CreateTopicRequest {
             name = topicName
         }
 
-        SnsClient { region = "us-east-1" }.use { snsClient ->
-            val result = snsClient.createTopic(request)
-            return result.topicArn.toString()
+        SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
+            return TopicCreatedResponse.from(snsClient.createTopic(request))
         }
     }
 
-    suspend fun pubTopic(topicArnVal: String, messageVal: String): String {
+    suspend fun listSNSTopics(awsRegion: String?): TopicsListResponse {
+        SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
+            return TopicsListResponse.from(snsClient.listTopics(ListTopicsRequest { }))
+        }
+    }
+
+    suspend fun pubTopic(
+        topicArnVal: String,
+        messageVal: String,
+        awsRegion: String?,
+    ): MessagePublishedResponse {
 
         val request = PublishRequest {
             message = messageVal
             topicArn = topicArnVal
         }
 
-        SnsClient { region = "us-east-1" }.use { snsClient ->
-            val result = snsClient.publish(request)
-            return "${result.messageId} message sent."
+        SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
+            return MessagePublishedResponse.from(snsClient.publish(request))
         }
     }
 
-
+    private fun generateTopicArn(
+        accountId: String = awsAccountId,
+        region: String = defaultAwsRegion,
+        topicName: String = defaultTopicName,
+    ): String {
+        return "$topicArnBase:$region:$accountId:$topicName"
+    }
 }
