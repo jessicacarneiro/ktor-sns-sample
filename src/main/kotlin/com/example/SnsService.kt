@@ -1,9 +1,7 @@
 import aws.sdk.kotlin.services.sns.SnsClient
 import aws.sdk.kotlin.services.sns.model.*
-import com.example.responses.MessagePublishedResponse
-import com.example.responses.TopicAttributesListResponse
-import com.example.responses.TopicCreatedResponse
-import com.example.responses.TopicsListResponse
+import com.example.responses.*
+import com.example.responses.Subscription
 
 class SnsService {
     private val defaultAwsRegion = System.getenv("AWS_REGION")
@@ -66,6 +64,25 @@ class SnsService {
         SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
             val result = snsClient.getTopicAttributes(request)
             return TopicAttributesListResponse.from(result)
+        }
+    }
+
+    suspend fun listSNSSubscriptions(awsRegion: String?): SubscriptionsListResponse {
+
+        SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
+            val response = snsClient.listSubscriptions(ListSubscriptionsRequest {})
+            return SubscriptionsListResponse(
+                subscriptions = response.subscriptions?.map { sub ->
+                    Subscription(
+                        topicArn = sub.topicArn,
+                        protocol = sub.protocol,
+                        owner = sub.owner,
+                        endpoint = sub.endpoint,
+                        subscriptionArn = sub.subscriptionArn,
+                    )
+                }
+                    ?: emptyList()
+            )
         }
     }
 

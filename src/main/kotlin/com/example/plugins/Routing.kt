@@ -33,6 +33,11 @@ fun Application.configureRouting() {
             call.respond(snsService.getSNSTopicAttributes(topicName!!, region))
         }
 
+        get("/subscriptions") {
+            val region = call.request.queryParameters["region"]
+            call.respond(snsService.listSNSSubscriptions(region))
+        }
+
         post("/messages") {
             val request = call.receive<PublishMessageRequest>()
             call.respond(snsService.pubTopic(request.topicArn, request.message, request.region))
