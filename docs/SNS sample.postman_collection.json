@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "6a1ec9c9-d4f8-4f9c-ab1c-a17f9e06532d",
+		"name": "SNS sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25204409"
+	},
+	"item": [
+		{
+			"name": "List all topics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\": \"testingTopic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/topics?region=us-east-1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"topics"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "us-east-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create topic",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\": \"topicName\",\n \"region\": \"us-east-1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/topics",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"topics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete topic",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\": \"testingTopic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/topics/topicName?region=us-east-1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"topics",
+						"topicName"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "us-east-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish message to topic",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"topicArn\": \"topicArn\",\n \"message\": \"hello from the topic!\",\n \"region\": \"us-east-1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/messages",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get topic attributes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\": \"testingTopic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/topics/topicName/attributes?region=us-east-1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"topics",
+						"topicName",
+						"attributes"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "us-east-1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set topic attributes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"attribute\": \"attribute1\",\n \"value\": \"value1\",\n \"region\": \"us-east-1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/topics/topicName/attributes",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"topics",
+						"topicName",
+						"attributes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all subscriptions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"name\": \"testingTopic\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/subscriptions",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
