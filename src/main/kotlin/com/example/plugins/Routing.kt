@@ -27,6 +27,12 @@ fun Application.configureRouting() {
             call.respond(snsService.deleteSNSTopic(topicName!!, region))
         }
 
+        get("/topics/{name}/attributes") {
+            val topicName = call.parameters["name"]
+            val region = call.request.queryParameters["region"]
+            call.respond(snsService.getSNSTopicAttributes(topicName!!, region))
+        }
+
         post("/messages") {
             val request = call.receive<PublishMessageRequest>()
             call.respond(snsService.pubTopic(request.topicArn, request.message, request.region))

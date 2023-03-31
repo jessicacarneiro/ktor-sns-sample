@@ -1,9 +1,7 @@
 import aws.sdk.kotlin.services.sns.SnsClient
-import aws.sdk.kotlin.services.sns.model.CreateTopicRequest
-import aws.sdk.kotlin.services.sns.model.DeleteTopicRequest
-import aws.sdk.kotlin.services.sns.model.ListTopicsRequest
-import aws.sdk.kotlin.services.sns.model.PublishRequest
+import aws.sdk.kotlin.services.sns.model.*
 import com.example.responses.MessagePublishedResponse
+import com.example.responses.TopicAttributesListResponse
 import com.example.responses.TopicCreatedResponse
 import com.example.responses.TopicsListResponse
 
@@ -56,6 +54,18 @@ class SnsService {
         SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
             snsClient.deleteTopic(request)
             return "$topicName was successfully deleted."
+        }
+    }
+
+    suspend fun getSNSTopicAttributes(topicName: String, awsRegion: String?): TopicAttributesListResponse {
+
+        val request = GetTopicAttributesRequest {
+            topicArn = generateTopicArn(region = awsRegion ?: defaultAwsRegion, topicName = topicName)
+        }
+
+        SnsClient { region = awsRegion ?: defaultAwsRegion }.use { snsClient ->
+            val result = snsClient.getTopicAttributes(request)
+            return TopicAttributesListResponse.from(result)
         }
     }
 
